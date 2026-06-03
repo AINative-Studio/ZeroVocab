@@ -3,6 +3,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import { ZeroDBClient } from "./clients/zerodb-client";
 import { createUserRouter } from "./routes/users";
+import { createVocabularyRouter } from "./routes/vocabulary";
 import { createContextRoutes } from "./routes/contexts";
 
 dotenv.config();
@@ -27,6 +28,7 @@ app.get("/health", (_req, res) => {
 
 // Mount routes
 app.use("/api/v1/users", createUserRouter(db));
+app.use("/api/v1/vocabulary", createVocabularyRouter(db));
 app.use(createContextRoutes(db));
 
 app.listen(port, () => {

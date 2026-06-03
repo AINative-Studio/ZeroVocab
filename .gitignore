@@ -216,3 +216,14 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Node.js
+node_modules/
+dist/
+*.tsbuildinfo
+.turbo/
+
+# Package managers
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
