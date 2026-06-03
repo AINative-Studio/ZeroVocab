@@ -1,0 +1,5 @@
+dist/
+node_modules/
+*.zip
+# Override root gitignore — lib/ is source code here, not Python build artifacts
+!lib/
