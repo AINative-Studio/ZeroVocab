@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ZeroVocab</title>
+  <link rel="stylesheet" href="popup.css" />
+</head>
+<body>
+  <div class="popup">
+    <header class="header">
+      <div class="header-left">
+        <svg class="logo-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="12" cy="12" r="10" fill="#6366f1"/>
+          <path d="M8 12h8M8 8.5l4 7 4-7" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span class="brand">ZeroVocab</span>
+      </div>
+      <div class="header-right">
+        <span id="status-dot" class="status-dot status-checking" title="Checking connection..."></span>
+        <button class="icon-btn" id="settings-btn" title="Settings" aria-label="Open settings">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="3"/>
+            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <div class="stats-bar">
+      <span class="stats-count">
+        <span id="vocab-count">&#8212;</span> words captured
+      </span>
+      <button class="refresh-btn" id="refresh-btn" title="Refresh" aria-label="Refresh captures">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="23 4 23 10 17 10"/>
+          <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
+        </svg>
+      </button>
+    </div>
+
+    <main id="main-panel">
+      <div id="loading-state" class="state-panel" hidden>
+        <div class="spinner"></div>
+        <p class="state-text">Loading captures&#8230;</p>
+      </div>
+
+      <div id="empty-state" class="state-panel" hidden>
+        <svg class="empty-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 0 0 6 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0 1 6 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 0 1 6-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0 0 18 18a8.967 8.967 0 0 0-6 2.292m0-14.25v14.25"/>
+        </svg>
+        <p class="state-text">No captures yet</p>
+        <p class="state-subtext">Visit Google Translate or select text on any page to start building your vocabulary.</p>
+      </div>
+
+      <div id="error-state" class="state-panel" hidden>
+        <svg class="error-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <circle cx="12" cy="12" r="10"/>
+          <line x1="12" y1="8" x2="12" y2="12"/>
+          <line x1="12" y1="16" x2="12.01" y2="16"/>
+        </svg>
+        <p class="state-text">Could not connect</p>
+        <p id="error-message" class="state-subtext">Check your API settings.</p>
+        <button class="btn-secondary" id="open-settings-btn">Configure API</button>
+      </div>
+
+      <div id="unconfigured-state" class="state-panel" hidden>
+        <svg class="setup-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6h9.75M10.5 6a1.5 1.5 0 1 1-3 0m3 0a1.5 1.5 0 1 0-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-9.75 0h9.75"/>
+        </svg>
+        <p class="state-text">Setup required</p>
+        <p class="state-subtext">Connect ZeroVocab to your API to start capturing vocabulary.</p>
+        <button class="btn-primary" id="setup-btn">Get Started</button>
+      </div>
+
+      <ul id="captures-list" class="captures-list" role="list" hidden></ul>
+    </main>
+
+    <div id="settings-panel" class="settings-panel" hidden>
+      <div class="settings-header">
+        <h2 class="settings-title">Settings</h2>
+        <button class="icon-btn" id="close-settings-btn" aria-label="Close settings">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"/>
+            <line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
+      </div>
+
+      <form id="settings-form" class="settings-form" autocomplete="off">
+        <div class="field">
+          <label class="label" for="api-url">API URL</label>
+          <input type="url" id="api-url" name="apiUrl" class="input"
+            placeholder="https://zerovocab.ainative.studio" autocomplete="off" />
+        </div>
+        <div class="field">
+          <label class="label" for="api-key">API Key</label>
+          <input type="password" id="api-key" name="apiKey" class="input"
+            placeholder="zv_..." autocomplete="new-password" />
+        </div>
+        <div class="field">
+          <label class="label" for="user-id">
+            User ID <span class="label-optional">(optional)</span>
+          </label>
+          <input type="text" id="user-id" name="userId" class="input"
+            placeholder="user_123" autocomplete="off" />
+        </div>
+        <div class="field field-toggle">
+          <label class="label" for="enabled-toggle">Enable capture</label>
+          <label class="toggle" for="enabled-toggle">
+            <input type="checkbox" id="enabled-toggle" name="enabled" checked />
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+        <div class="settings-actions">
+          <button type="button" class="btn-secondary" id="test-connection-btn">Test connection</button>
+          <button type="submit" class="btn-primary">Save settings</button>
+        </div>
+        <p id="settings-feedback" class="settings-feedback" aria-live="polite"></p>
+      </form>
+    </div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

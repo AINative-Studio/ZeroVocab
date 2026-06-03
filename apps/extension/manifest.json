@@ -1,0 +1,46 @@
+{
+  "manifest_version": 3,
+  "name": "ZeroVocab",
+  "version": "0.1.0",
+  "description": "AI-native vocabulary capture — never forget a word",
+  "permissions": ["activeTab", "contextMenus", "storage"],
+  "host_permissions": ["https://translate.google.com/*", "https://*/*", "http://*/*"],
+  "background": {
+    "service_worker": "background/service-worker.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://translate.google.com/*"],
+      "js": ["content-scripts/google-translate.js"],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content-scripts/selection-capture.js"],
+      "run_at": "document_idle"
+    }
+  ],
+  "action": {
+    "default_popup": "popup/popup.html",
+    "default_icon": {
+      "16": "icons/icon-16.png",
+      "48": "icons/icon-48.png",
+      "128": "icons/icon-128.png"
+    },
+    "default_title": "ZeroVocab"
+  },
+  "commands": {
+    "capture-selection": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+M",
+        "mac": "Command+Shift+M"
+      },
+      "description": "Save selected text to ZeroVocab"
+    }
+  },
+  "icons": {
+    "16": "icons/icon-16.png",
+    "48": "icons/icon-48.png",
+    "128": "icons/icon-128.png"
+  }
+}
